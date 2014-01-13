@@ -1,10 +1,10 @@
 {
-  "name"           : "adm-easy-checkout",
-  "description"    : "a easy way to checkout atv do more",  
+  "name"           : "middle-control-system",
+  "description"    : "embedded system control",  
   "dependencies"   : {
                         "native-dns" : "0.4.1",
                         "express" : "3.4.2",
-                        "jade"    : "0.35.0"
+                        "ejs"    : "*"
                      },
   "author"         : "BEJO Li",
   "email"          : "bejo.mob@gmail.com",

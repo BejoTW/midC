@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Configuration</p>
+<form action='/intf' method='post'>
+<%= name %>:<br />
+<br />
+IP: <input type='text' name='ip' value='<%= ip %>'><br />
+Mask: <input type='text' name='mask' value='<%= mask %>'>
+<input type='submit' value='Submit'>
+</form>
+
+  </body>
+</html>

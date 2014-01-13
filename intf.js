@@ -4,8 +4,6 @@ var e = require('./configEvent.js');
 
 var exec = require('child_process').exec, child;
 
-
-
 var intUtils = {
     set: function (s) {
         child = exec('ifconfig '+s.name[0]+' '+s.ip[0],
@@ -19,14 +17,13 @@ var intUtils = {
     }
 }
 
-e.on('interface', function (n) {
-    // console.log(JSON.stringify(e.running));
+e.on('intf', function (n) {
+    console.log(n);
     //Check which interface
-    return;
-    for (var i in e.running.interface) {
-        if (n.interface[0].name[0] === e.running.interface[i].name[0]) {
+    for (var i in e.running.intf) {
+        if (n.intf[0].name[0] === e.running.intf[i].name[0]) {
             console.log('match');
-            intUtils.set(n.interface[0]);
+            intUtils.set(n.intf[0]);
             return;
         }
     }
