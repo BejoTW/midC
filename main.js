@@ -1,9 +1,26 @@
 "use strict"; 
+var e = require('./config.js');
+var _ = require('underscore');
+var cm = require('./cm.js');
+
+//Save-config Loading 
+e.Running = _.clone(e.readSave());
+
+console.log(cm.fmtCheckByRoot(e.Running.ip.route[1]));
+
+// console.log('Run '+JSON.stringify(e.Running));
+// console.log('Save '+JSON.stringify(e.readSave()));
+// console.log(e.erase());
+// console.log('erase Run'+JSON.stringify(e.Running));
+// console.log('erase Save'+JSON.stringify(e.readSave()));
+// console.log(e.save());
+// console.log('save save'+JSON.stringify(e.readSave()));
+
 //Loading module
-var mUtils = require('./mUtils.js')
-require('./intf.js');
-var e = require('./configEvent.js');
-var webS = require('./webS.js');
+// var mUtils = require('./mUtils.js')
+// require('./intf.js');
+// var e = require('./configEvent.js');
+// var webS = require('./webS.js');
 
 // var n = {
     // "intf" : [{
@@ -25,4 +42,4 @@ var webS = require('./webS.js');
 // var dnsS = require('./dnsS.js');
 
 //Enable Web
-webS.start(3000, 4430);
+// webS.start(3000, 4430);
