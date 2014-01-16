@@ -9,7 +9,8 @@ var defPath = './config.def';
 var fs = require('fs');
 
 var view = {
-    Running: null,
+    preRunning: null,
+    running: null,
     readSave: function (){
         return JSON.parse(fs.readFileSync(savePath, 'utf8'));
     },

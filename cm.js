@@ -1,5 +1,6 @@
 "use strict";
 var assert = require('assert');
+var _ = require('underscore');
 
 var view = {
     objCompare: function (n, o) {
@@ -9,6 +10,10 @@ var view = {
             return false;
         }
         return true;
+    },
+    configMergeBySeq: function (dest, src) {
+        var n = _.extend(dest, src);
+        return [true, n];
     },
     configGetByValue: function(root, index, value) {
         var ret = [false, null];

@@ -4,15 +4,22 @@ var _ = require('underscore');
 var cm = require('./cm.js');
 
 //Save-config Loading 
-e.Running = _.clone(e.readSave());
+e.running = _.clone(e.readSave());
+
+
+var dummy = {
+                "isLeaf" : ["true", "."],
+                "idx" : ["0", "."],
+                "name" : ["eth2", "."],
+                "mask" : ["255.255.0.0", 'ip']};
+
+e.preRunning = _.clone(e.running);            
+var n = cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
+console.log(e.preRuning.intf.data[0]);
 
 // var ret = cm.configGetByValue(e.Running, ["intf","data","?","idx"], "0");
 // console.log(ret);
 
-var ret = cm.fmtCheckByRoot(e.Running);
-if (ret[0].ret != true) {
-    console.log('err'+ret[0].item);
-}  
 
 
 // for (var i in ret) {
