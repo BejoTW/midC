@@ -6,7 +6,20 @@ var cm = require('./cm.js');
 //Save-config Loading 
 e.Running = _.clone(e.readSave());
 
-console.log(cm.fmtCheckByRoot(e.Running.ip.route[1]));
+// var ret = cm.configGetByValue(e.Running, ["intf","data","?","idx"], "0");
+// console.log(ret);
+
+var ret = cm.fmtCheckByRoot(e.Running);
+if (ret[0].ret != true) {
+    console.log('err'+ret[0].item);
+}  
+
+
+// for (var i in ret) {
+// console.log(ret[i][0]+ret[i][1]+ret[i][2]);
+// }
+
+// console.log(cm.fmtCheckByRoot(e.Running.ip.route[1]));
 
 // console.log('Run '+JSON.stringify(e.Running));
 // console.log('Save '+JSON.stringify(e.readSave()));

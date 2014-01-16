@@ -1,20 +1,29 @@
 {
-    "intf" : [{
-            "idx" : ["0", "."],
-            "name" : ["eth0", "."],
-            "duplex" : ["auto", "auto|full|half"],
-            "speed" : ["auto", "10|100|1000|auto"],
-            "ip" : ["192.168.10.1", "ip"],
-            "mask" : ["255.255.255.0", "ip"]
-        }
-    ],
+    "isLeaf" : ["false", "."],
+    "intf" : {
+        "isLeaf" : ["false", "."],
+        "data" :
+        [{
+                "isLeaf" : ["true", "."],
+                "idx" : ["0", "."],
+                "name" : ["eth0", "."],
+                "duplex" : ["auto", "auto|full|half"],
+                "speed" : ["auto", "10|100|1000|auto"],
+                "ip" : ["192.168.10.1", "ip"],
+                "mask" : ["255.255.255.0", "ip"]
+            }
+        ]
+    },
     "ip" : {
+        "isLeaf" : ["false", "."],
         "route" : [{
+                "isLeaf" : ["true", "."],
                 "dest" : ["192.168.10.1", "ip"],
                 "mask" : ["255.255.255.0", "ip"],
                 "via" : ["192.168.1.1", "ip"],
                 "dev" : ["eth0", "."]
             }, {
+                "isLeaf" : ["true", "."],
                 "dest" : ["192.168.9.0", "ip"],
                 "mask" : ["255.255.255.0", "ip"],
                 "via" : ["192.168.1.1", "ip"],
