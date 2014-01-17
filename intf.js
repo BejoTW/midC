@@ -1,6 +1,7 @@
 "use strict"; 
-var mUtils = require('./mUtils.js')
-var e = require('./configEvent.js');
+// var mUtils = require('./mUtils.js')
+// var e = require('./configEvent.js');
+var cm = require('./cm.js');
 
 var exec = require('child_process').exec, child;
 
@@ -17,8 +18,9 @@ var intUtils = {
     }
 }
 
-e.on('intf', function (n) {
-    console.log(n);
+cm.e.on('intf', function (n) {
+    console.log('HIHI');
+    return;
     //Check which interface
     for (var i in e.running.intf) {
         if (n.intf[0].name[0] === e.running.intf[i].name[0]) {
@@ -30,4 +32,3 @@ e.on('intf', function (n) {
     console.log('no this interface');
     return;
 });
-

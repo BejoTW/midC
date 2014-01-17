@@ -1,9 +1,85 @@
 "use strict";
 var assert = require('assert');
 var _ = require('underscore');
+var util = require('util');
+var events = require('events');
+var event = new events.EventEmitter();
+
+//Function seq table
+//intf: [SystemLevel, isDep, Seq(1~9999), isTriger, isReload,[{specify number, specify number}]];
+//SystemLevel
+//0 - God
+//1 - Kernel
+//2 - module/Driver
+//3 - Network L1
+//4 - Network L2
+//5 - Network L3
+//6 - Network L4 - L7
+//7 - Low level  
+var featureSet = [
+    ["intf", 4, false, 20, false, false],
+    ["c", 4, false, 10, false, false],
+    ["b", 4, false, 9, false, false],
+    ["a", 1, false, 11, false, false],
+    ["e", 1, false, 10, false, false],
+    ["a", 4, false, 10, false, false],
+    ["g", 2, false, 10, false, false],
+    ["routing", 5, false, 10, false, false]
+]
 
 var view = {
-    objCompare: function (n, o) {
+    e: event,
+    initFeatureSet: function () {
+        var v = _.groupBy(featureSet, function(d){return d[1]});
+        for (var i in v) {
+            v[i] = _.sortBy(v[i], function(d){return d[3]});
+        }
+        view.featureSeq = _.flatten(JSON.parse(JSON.stringify(_.values(v))), true);
+        view.featureGroup = JSON.parse(JSON.stringify(v));
+    },
+//example:
+// { '1': 
+   // [ [ 'e', 1, false, 10, false, false ],
+     // [ 'a', 1, false, 11, false, false ] ],
+  // '2': [ [ 'g', 2, false, 10, false, false ] ],
+  // '4': 
+   // [ [ 'b', 4, false, 9, false, false ],
+     // [ 'c', 4, false, 10, false, false ],
+     // [ 'a', 4, false, 10, false, false ],
+     // [ 'intf', 4, false, 20, false, false ] ],
+  // '5': [ [ 'routing', 5, false, 10, false, false ] ] }
+
+    featureGroup: null,
+//example:    
+ // [ [ 'e', 1, false, 10, false, false ],
+  // [ 'a', 1, false, 11, false, false ],
+  // [ 'g', 2, false, 10, false, false ],
+  // [ 'b', 4, false, 9, false, false ],
+  // [ 'c', 4, false, 10, false, false ],
+  // [ 'a', 4, false, 10, false, false ],
+  // [ 'intf', 4, false, 20, false, false ],
+  // [ 'routing', 5, false, 10, false, false ] ]   
+    featureSeq: null,
+    assign: function (running, preRunning) {
+        var assign = ['b', 'a', 'routing', 'intf'];
+        // for (var i in running) {
+            // if (!_.isEqual(running[i], preRunning[i])) {
+                // assign.push(i);
+            // }
+        // }        
+        assign = _.sortBy(assign, function(d) {
+            for (var i in view.featureSeq) {
+                if (view.featureSeq[i][0] === d) {
+                    return i;
+                }
+            }});
+        // Now assign is by order
+        for (var i in assign) {
+        console.log(assign[i]);
+            view.e.emit(assign[i], assign);
+        }
+    },
+    configCompare: function (n, o) {
         try {
             assert.deepEqual(n, o);
         } catch (e) {
@@ -12,7 +88,8 @@ var view = {
         return true;
     },
     configMergeBySeq: function (dest, src) {
-        var n = _.extend(dest, src);
+        var tmp = JSON.parse(JSON.stringify(src));
+        var n = _.extend(dest, tmp);
         return [true, n];
     },
     configGetByValue: function(root, index, value) {

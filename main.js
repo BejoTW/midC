@@ -2,10 +2,11 @@
 var e = require('./config.js');
 var _ = require('underscore');
 var cm = require('./cm.js');
+require('./intf.js');
 
-//Save-config Loading 
-e.running = _.clone(e.readSave());
-
+//Save-config Loading
+e.running = JSON.parse(JSON.stringify(e.readSave()));
+e.preRunning = JSON.parse(JSON.stringify(e.running)); 
 
 var dummy = {
                 "isLeaf" : ["true", "."],
@@ -13,13 +14,13 @@ var dummy = {
                 "name" : ["eth2", "."],
                 "mask" : ["255.255.0.0", 'ip']};
 
-e.preRunning = _.clone(e.running);            
-var n = cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
-console.log(e.preRuning.intf.data[0]);
+cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
+
+cm.initFeatureSet();
+cm.assign(e.running, e.preRunning);
 
 // var ret = cm.configGetByValue(e.Running, ["intf","data","?","idx"], "0");
 // console.log(ret);
-
 
 
 // for (var i in ret) {

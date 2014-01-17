@@ -14,7 +14,7 @@
             }
         ]
     },
-    "ip" : {
+    "routing" : {
         "isLeaf" : ["false", "."],
         "route" : [{
                 "isLeaf" : ["true", "."],
