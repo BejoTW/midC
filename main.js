@@ -19,6 +19,7 @@ cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
 cm.initFeatureSet();
 cm.assign(e.running, e.preRunning);
 
+
 // var ret = cm.configGetByValue(e.Running, ["intf","data","?","idx"], "0");
 // console.log(ret);
 

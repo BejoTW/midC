@@ -60,8 +60,26 @@ var view = {
   // [ 'intf', 4, false, 20, false, false ],
   // [ 'routing', 5, false, 10, false, false ] ]   
     featureSeq: null,
+    getFeatureSetByName: function (c) {
+        for (var i in view.featureSeq) {
+            if (view.featureSeq[i][0] === c) {
+                return view.featureSeq[i];
+            }
+        }
+        return false;
+    },
+    setFeatureOn: function (c) {
+        for (var i in view.featureSeq) {
+            if (view.featureSeq[i][0] === c) {
+                view.featureSeq[i][4] = true;
+                view.featureSeq[i][5] = true;
+                return true;
+            }
+        }
+        return false;
+    },
     assign: function (running, preRunning) {
-        var assign = ['b', 'a', 'routing', 'intf'];
+        var assign = ['b', 'a', 'intf'];
         // for (var i in running) {
             // if (!_.isEqual(running[i], preRunning[i])) {
                 // assign.push(i);
@@ -74,9 +92,26 @@ var view = {
                 }
             }});
         // Now assign is by order
+        // Set flag
         for (var i in assign) {
-        console.log(assign[i]);
-            view.e.emit(assign[i], assign);
+            view.setFeatureOn(assign[i])
+        }
+        
+        for (var i in view.featureSeq) {
+            if(view.featureSeq[i][4] === true) {
+                view.e.emit(view.featureSeq[i][0], 'SetFlag');
+            }
+        }
+        
+        for (var i in view.featureSeq) {
+            if(view.featureSeq[i][4] === true) {
+                view.e.emit(view.featureSeq[i][0], 'DoSomeThings');
+            }
+        }
+        //Done and Clear Flag
+        for (var i in view.featureSeq) {
+            view.featureSeq[i][4] = false;
+            view.featureSeq[i][5] = false;
         }
     },
     configCompare: function (n, o) {

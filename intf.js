@@ -19,7 +19,10 @@ var intUtils = {
 }
 
 cm.e.on('intf', function (n) {
-    console.log('HIHI');
+    console.log(n);
+    if ( n === 'SetFlag') {
+        cm.setFeatureOn('Routing');
+    }
     return;
     //Check which interface
     for (var i in e.running.intf) {
