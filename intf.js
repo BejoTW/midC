@@ -21,7 +21,7 @@ var intUtils = {
 cm.e.on('intf', function (n) {
     console.log(n);
     if ( n === 'SetFlag') {
-        cm.setFeatureOn('Routing');
+        cm.setFeatureOn('routing');
     }
     return;
     //Check which interface

@@ -79,12 +79,12 @@ var view = {
         return false;
     },
     assign: function (running, preRunning) {
-        var assign = ['b', 'a', 'intf'];
-        // for (var i in running) {
-            // if (!_.isEqual(running[i], preRunning[i])) {
-                // assign.push(i);
-            // }
-        // }        
+        var assign = [];
+        for (var i in running) {
+            if (!_.isEqual(running[i], preRunning[i])) {
+                assign.push(i);
+            }
+        }        
         assign = _.sortBy(assign, function(d) {
             for (var i in view.featureSeq) {
                 if (view.featureSeq[i][0] === d) {
@@ -108,6 +108,7 @@ var view = {
                 view.e.emit(view.featureSeq[i][0], 'DoSomeThings');
             }
         }
+        console.log(view.featureSeq);
         //Done and Clear Flag
         for (var i in view.featureSeq) {
             view.featureSeq[i][4] = false;
