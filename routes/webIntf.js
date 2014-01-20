@@ -3,9 +3,9 @@
  * GET and Render Interface page.
  */
 var e = require('../config.js');
-
 exports.page = function (req, res) {
     res.render('webIntf', {
+        config : JSON.stringify(e.running),
         title : 'Interface',
         name : e.running.intf.data[0].name[0],
         ip : e.running.intf.data[0].ip[0],

@@ -7,15 +7,99 @@
   <body>
     <h1><%= title %></h1>
     <p>Configuration</p>
-<form action='/intf' method='post'>
-<%= name %>:<br />
-<br />
-IP: <input type='text' name='ip' value='<%= ip %>'><br />
-Mask: <input type='text' name='mask' value='<%= mask %>'>
-Duplex: <input type='text' name='duplex' value='<%= duplex %>'>
-Speed: <input type='text' name='speed' value='<%= speed %>'>
-<input type='submit' value='Submit'>
-</form>
+<script>
+var charxml = function (s) {
+    return s.replace(/(&quot;)|(&gt;)|(&amp;)|(&lt;)|(&apos;)/g, function (c) {
+        return {
+            "&amp;": "&",
+            "&lt;": "<",
+            "&gt;": ">",
+            "&apos;": "'",
+            "&quot;": '"'
+        }[c]
+    })
+};
 
-  </body>
+var config = '<%= config %>';
+config = charxml(config);
+configObj = JSON.parse(config);
+
+var req = function (url, method, headers, postdata,callback, args) {
+    if (!url) {
+        throw "loadURL requires a url argument";
+    }
+    var method = method || "GET",
+    headers = headers || {},
+    postdata = postdata || "";
+    var xhr = new XMLHttpRequest();
+    xhr.onreadystatechange = function() {
+        try {
+            if (xhr.readyState == 4 ) {
+                if ( xhr.status == 200) {
+                    callback(xhr.responseText, args);
+                } else {
+                    alert(' ERROR\n' +xhr.status+'\n'+url);
+                }
+            }
+        } catch (e) {
+            alert("Abort:  ERROR\n"+e);
+            xhr.abort();
+        }
+    }
+    xhr.open(method, url, false);
+    for(var key in headers) {
+        xhr.setRequestHeader(key, headers[key]);
+    }
+    xhr.send(postdata);
+    return xhr;
+};
+
+var sendTo = function () {
+    for (var i in configObj.intf.data) {
+        var t = configObj.intf.data[i];
+        var f = document.getElementById(t.name[0]);
+        t.ip[0] = document.getElementById(t.ip);
+        t.mask[0] = document.getElementById(t.mask);
+        t.duplex[0] = document.getElementById(t..duplex);
+        t.speed[0] = document.getElementById(t.speed);
+    };
+
+    var postdata = 'data='+JSON.stringify(configObj);
+    req('/intf', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+        alert(d);
+        return;
+    });
+}
+    
+</script>    
+<div id='intList'>
+</div>
+<button type="button" onclick="sendTo()">Send</button>
+
+<script>
+var html = '';
+for (var i in configObj.intf.data) {
+    var t = configObj.intf.data[i];
+    html += '<div id='+t.name[0]+'>'+t.name[0]+':<br />IP: <input type="text" id="ip" value="'+t.ip[0]+'"><br />Mask: <input type="text" id="mask" value="'+t.mask[0]+'"><br />Duplex: <input type="text" id="duplex" value="'+t.duplex[0]+'"><br />Speed: <input type="text" id="speed" value="'+t.speed[0]+'"><br /><br /></div>';
+}
+
+document.getElementById("intList").innerHTML = html;
+</script>
+
+</body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

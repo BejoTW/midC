@@ -5,13 +5,16 @@ var cm = require('./cm.js');
 
 //enable Feature
 require('./intf.js');
-//Web
-var webS = require('./webS.js');
 
 //Save-config Loading
 e.running = JSON.parse(JSON.stringify(e.readSave()));
 e.preRunning = JSON.parse(JSON.stringify(e.running));
+e.runningText = JSON.stringify(e.running);
 cm.initFeatureSet(); 
+
+//Enable Web Setting
+var webS = require('./webS.js');
+webS.start(3000, 4430);
 
 // var dummy = {
                 // "isLeaf" : ["true", "."],
@@ -24,12 +27,6 @@ cm.initFeatureSet();
 // cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
 
 // cm.assign(e.running, e.preRunning);
-
-
-
-
-//-------------------
-webS.start(3000, 4430);
 
 
 
