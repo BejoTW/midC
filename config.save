@@ -6,7 +6,7 @@
         [{
                 "isLeaf" : ["true", "."],
                 "idx" : ["0", "."],
-                "name" : ["eth0", "."],
+                "name" : ["eth1", "."],
                 "duplex" : ["auto", "auto|full|half"],
                 "speed" : ["auto", "10|100|1000|auto"],
                 "ip" : ["192.168.10.1", "ip"],

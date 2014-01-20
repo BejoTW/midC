@@ -72,6 +72,23 @@ var view = {
         for (var i in view.featureSeq) {
             if (view.featureSeq[i][0] === c) {
                 view.featureSeq[i][4] = true;
+                return true;
+            }
+        }
+        return false;
+    },
+    setFeatureAllOnByLevel: function (n) {
+        for (var i in view.featureSeq) {
+            if (view.featureSeq[i][1] >= n) {
+                view.featureSeq[i][5] = true;
+                return true;
+            }
+        }
+        return false;
+    },
+    setFeatureReload: function (c) {
+        for (var i in view.featureSeq) {
+            if (view.featureSeq[i][0] === c) {
                 view.featureSeq[i][5] = true;
                 return true;
             }
@@ -80,6 +97,7 @@ var view = {
     },
     assign: function (running, preRunning) {
         var assign = [];
+        var lowLevel = 0;
         for (var i in running) {
             if (!_.isEqual(running[i], preRunning[i])) {
                 assign.push(i);
@@ -93,18 +111,41 @@ var view = {
             }});
         // Now assign is by order
         // Set flag
+        //Set:
         for (var i in assign) {
             view.setFeatureOn(assign[i])
         }
         
         for (var i in view.featureSeq) {
-            if(view.featureSeq[i][4] === true) {
-                view.e.emit(view.featureSeq[i][0], 'SetFlag');
+            if(view.featureSeq[i][4] == true&&view.featureSeq[i][2] == false) {
+                view.e.emit(view.featureSeq[i][0], 'setFeatureOn');
             }
         }
         
+        //High-level needs ro reload: ex:trigger level 3 and level 4-7 all need to be reloaded
         for (var i in view.featureSeq) {
-            if(view.featureSeq[i][4] === true) {
+            if(view.featureSeq[i][4] == true) {
+                if (lowLevel !== 0&&lowLevel < view.featureSeq[i][1]) {
+                    view.setFeatureAllOnByLevel(view.featureSeq[i][1]);
+                } else {
+                    lowLevel = view.featureSeq[i][1];
+                    continue;
+                }
+            }
+        }
+        
+        //Exec:
+        //main exec (input)
+        for (var i in view.featureSeq) {
+            if(view.featureSeq[i][4] == true&&view.featureSeq[i][5] == false) {
+                view.e.emit(view.featureSeq[i][0], 'DoSomeThings main');
+            }
+        }
+             
+        
+        //reload exec
+        for (var i in view.featureSeq) {
+            if(view.featureSeq[i][4] == true&&view.featureSeq[i][5] == true) {
                 view.e.emit(view.featureSeq[i][0], 'DoSomeThings');
             }
         }

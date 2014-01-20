@@ -11,7 +11,9 @@ e.preRunning = JSON.parse(JSON.stringify(e.running));
 var dummy = {
                 "isLeaf" : ["true", "."],
                 "idx" : ["0", "."],
-                "name" : ["eth2", "."],
+                "name" : ["eth1", "."],
+                "ip" : ["192.168.20.10", 'ip'],
+                "speed" : ["10", "10|100|1000|auto"],
                 "mask" : ["255.255.0.0", 'ip']};
 
 cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
