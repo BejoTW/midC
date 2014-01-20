@@ -2,24 +2,36 @@
 var e = require('./config.js');
 var _ = require('underscore');
 var cm = require('./cm.js');
+
+//enable Feature
 require('./intf.js');
+//Web
+var webS = require('./webS.js');
 
 //Save-config Loading
 e.running = JSON.parse(JSON.stringify(e.readSave()));
-e.preRunning = JSON.parse(JSON.stringify(e.running)); 
+e.preRunning = JSON.parse(JSON.stringify(e.running));
+cm.initFeatureSet(); 
 
-var dummy = {
-                "isLeaf" : ["true", "."],
-                "idx" : ["0", "."],
-                "name" : ["eth1", "."],
-                "ip" : ["192.168.20.10", 'ip'],
-                "speed" : ["10", "10|100|1000|auto"],
-                "mask" : ["255.255.0.0", 'ip']};
+// var dummy = {
+                // "isLeaf" : ["true", "."],
+                // "idx" : ["0", "."],
+                // "name" : ["eth1", "."],
+                // "ip" : ["192.168.20.10", 'ip'],
+                // "speed" : ["10", "10|100|1000|auto"],
+                // "mask" : ["255.255.0.0", 'ip']};
 
-cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
+// cm.configMergeBySeq(e.preRunning.intf.data[0], dummy);
 
-cm.initFeatureSet();
-cm.assign(e.running, e.preRunning);
+// cm.assign(e.running, e.preRunning);
+
+
+
+
+//-------------------
+webS.start(3000, 4430);
+
+
 
 
 // var ret = cm.configGetByValue(e.Running, ["intf","data","?","idx"], "0");

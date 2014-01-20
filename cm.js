@@ -102,7 +102,13 @@ var view = {
             if (!_.isEqual(running[i], preRunning[i])) {
                 assign.push(i);
             }
-        }        
+        }
+        //Check different
+        if(_.isEmpty(assign)) {
+            console.log('Running config is no change');
+            return false;
+        }
+        
         assign = _.sortBy(assign, function(d) {
             for (var i in view.featureSeq) {
                 if (view.featureSeq[i][0] === d) {
@@ -112,6 +118,7 @@ var view = {
         // Now assign is by order
         // Set flag
         //Set:
+        console.log("assign = "+JSON.stringify(assign));
         for (var i in assign) {
             view.setFeatureOn(assign[i])
         }
@@ -149,7 +156,7 @@ var view = {
                 view.e.emit(view.featureSeq[i][0], 'DoSomeThings');
             }
         }
-        console.log(view.featureSeq);
+        // console.log("featureSeq = "+JSON.stringify(view.featureSeq));
         //Done and Clear Flag
         for (var i in view.featureSeq) {
             view.featureSeq[i][4] = false;
@@ -207,8 +214,8 @@ var view = {
                 if (view.fmtCheck(d[i][0], d[i][1])) {
                     continue;
                 } else {
-                    console.log('Input format error: '+i+': '+ d[i][0]);
-                    if (ret[0] == true) {
+                    // console.log('Input format error: '+i+': '+ d[i][0]);
+                    if (ret == []) {
                         ret = [{ret: false, item: i, value: d[i][0]}];
                     } else {
                         ret.push({ret: false, item: i, value: d[i][0]});
@@ -227,9 +234,10 @@ var view = {
                  }
             return value; // don't change
         }
-
+        //vist all node
         JSON.stringify(root, nodeVisitor);
-        if (ret == '') {
+        
+        if (_.isEmpty(ret)) {
             ret = [{ret: true, item: null, value: null}];
         }
         return ret;

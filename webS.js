@@ -7,15 +7,14 @@
 var express = require('express');
 var routes = require('./routes');
 var user = require('./routes/user');
-var intf = require('./routes/intf');
+var intf = require('./routes/webIntf');
 var http = require('http');
 var path = require('path');
 var https = require('https');
 var fs = require('fs');
-var recv = require('./recv');
-var e = require('./configEvent.js');
 var _ = require('underscore');
-var mUtils = require('./mUtils.js')
+var cm = require('./cm.js');
+var e = require('./config.js');
 
 var privateKey = fs.readFileSync('CA/mlb.key').toString();
 var certificate = fs.readFileSync('CA/mlb.pem').toString();
@@ -49,16 +48,23 @@ app.get('/intf', intf.page);
 app.post('/intf', function(req, res) {
     
     //assign val
-    var r = _.clone(e.running);
-    r.intf[0].name[0] = "eth1";
-    r.intf[0].ip[0] = req.body.ip;
-    r.intf[0].mask[0] = req.body.mask;
+    e.preRunning.intf.data[0].name[0] = "eth1";
+    e.preRunning.intf.data[0].ip[0] = req.body.ip;
+    e.preRunning.intf.data[0].mask[0] = req.body.mask;
+    e.preRunning.intf.data[0].speed[0] = req.body.speed;
+    e.preRunning.intf.data[0].duplex[0] = req.body.duplex;
     //TODO: check val fmt
-    console.log('FMT CHECK: '+mUtils.fmtCheckByRoot(r.intf[0])[0]);
-    // recv.main('intf', r);
-    e.assign(r);
-    console.log(req.body.ip);
-    console.log(req.body.mask);
+    var ret = cm.fmtCheckByRoot(e.preRunning.intf.data[0]);
+    for(var i in ret) {
+        if (ret[i].ret == false) {
+            console.log("Error format: "+ret[i].item);
+            res.send('<script>alert("AA");</script>');
+            res.redirect( '/intf' );
+            return;
+        }
+    }
+    // console.log('assign ready:' +JSON.stringify(e.preRunning));
+    cm.assign(e.running, e.preRunning);
     res.redirect( '/intf' );
 });
 

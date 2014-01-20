@@ -79,10 +79,10 @@ var intf = {
         return;
     },
     doIt: function (old, n) {
-        if ((old.ip !== n.ip)||(old.mask !== n.mask)) {
+        if ((old.ip[0] !== n.ip[0])||(old.mask[0] !== n.mask[0])) {
             intf.setIP(n);
         }
-        if ((old.speed !== n.speed)||(old.duplex !== n.duplex)) {
+        if ((old.speed[0] !== n.speed[0])||(old.duplex[0] !== n.duplex[0])) {
             intf.setSpeedDuplex(n);
         }
         return;
