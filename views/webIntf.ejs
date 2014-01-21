@@ -22,7 +22,7 @@ var charxml = function (s) {
 
 var config = '<%= config %>';
 config = charxml(config);
-configObj = JSON.parse(config);
+var configObj = JSON.parse(config);
 
 var req = function (url, method, headers, postdata,callback, args) {
     if (!url) {
@@ -55,18 +55,21 @@ var req = function (url, method, headers, postdata,callback, args) {
 };
 
 var sendTo = function () {
+
     for (var i in configObj.intf.data) {
         var t = configObj.intf.data[i];
-        var f = document.getElementById(t.name[0]);
-        t.ip[0] = document.getElementById(t.ip);
-        t.mask[0] = document.getElementById(t.mask);
-        t.duplex[0] = document.getElementById(t..duplex);
-        t.speed[0] = document.getElementById(t.speed);
+        t.ip[0] = document.getElementById(t.name[0]+'ip').value;
+        t.mask[0] = document.getElementById(t.name[0]+'mask').value;
+        t.duplex[0] = document.getElementById(t.name[0]+'duplex').value;
+        t.speed[0] = document.getElementById(t.name[0]+'speed').value;
     };
 
     var postdata = 'data='+JSON.stringify(configObj);
-    req('/intf', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
-        alert(d);
+    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+        var r = JSON.parse(d);
+        if (r.status != true) {
+            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+        }
         return;
     });
 }
@@ -80,7 +83,7 @@ var sendTo = function () {
 var html = '';
 for (var i in configObj.intf.data) {
     var t = configObj.intf.data[i];
-    html += '<div id='+t.name[0]+'>'+t.name[0]+':<br />IP: <input type="text" id="ip" value="'+t.ip[0]+'"><br />Mask: <input type="text" id="mask" value="'+t.mask[0]+'"><br />Duplex: <input type="text" id="duplex" value="'+t.duplex[0]+'"><br />Speed: <input type="text" id="speed" value="'+t.speed[0]+'"><br /><br /></div>';
+    html += '<div id='+t.name[0]+'>'+t.name[0]+':<br />IP: <input type="text" id="'+t.name[0]+'ip" value="'+t.ip[0]+'"><br />Mask: <input type="text" id="'+t.name[0]+'mask" value="'+t.mask[0]+'"><br />Duplex: <input type="text" id="'+t.name[0]+'duplex" value="'+t.duplex[0]+'"><br />Speed: <input type="text" id="'+t.name[0]+'speed" value="'+t.speed[0]+'"><br /><br /></div>';
 }
 
 document.getElementById("intList").innerHTML = html;

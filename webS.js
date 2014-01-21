@@ -58,7 +58,7 @@ app.post('/intf', function(req, res) {
     // e.preRunning.intf.data[0].speed[0] = req.body.speed;
     // e.preRunning.intf.data[0].duplex[0] = req.body.duplex;
     //TODO: check val fmt
-    var ret = cm.fmtCheckByRoot(e.preRunning.intf.data[1]);
+    var ret = cm.fmtCheckByRoot(e.preRunning);
     for(var i in ret) {
         if (ret[i].ret == false) {
             console.log("Error format: "+ret[i].item);
@@ -69,6 +69,24 @@ app.post('/intf', function(req, res) {
     // console.log('assign ready:' +JSON.stringify(e.preRunning));
     cm.assign(e.running, e.preRunning);
     res.redirect( '/intf' );
+});
+
+app.post('/receive', function(req, res) {
+    
+    var cfg = JSON.parse(req.body.data);
+    console.log(JSON.stringify(cfg));
+    e.preRunning = JSON.parse(JSON.stringify(cfg));
+    //TODO: check val fmt
+    var ret = cm.fmtCheckByRoot(e.preRunning);
+    for(var i in ret) {
+        if (ret[i].ret == false) {
+            console.log("Error format: "+ret[i].item);
+            res.send('{"status": false, "result":"format error", "item":"'+ret[i].item+'", "value":"'+ret[i].value+'"}');
+            return;
+        }
+    }
+    res.send('{"status": true}');
+    cm.assign(e.running, e.preRunning);
 });
 
 module.exports = {
