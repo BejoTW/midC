@@ -4,6 +4,7 @@ var _ = require('underscore');
 var util = require('util');
 var events = require('events');
 var event = new events.EventEmitter();
+var e = require('./config.js');
 
 //Function seq table
 //intf: [SystemLevel, isDep, Seq(1~9999), isTriger, isReload,[{specify number, specify number}]];
@@ -162,6 +163,8 @@ var view = {
             view.featureSeq[i][4] = false;
             view.featureSeq[i][5] = false;
         }
+        //Sync preRunning and running config
+        e.syncRunningConfig();
     },
     configCompare: function (n, o) {
         try {

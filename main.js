@@ -2,6 +2,8 @@
 var e = require('./config.js');
 var _ = require('underscore');
 var cm = require('./cm.js');
+var tool = require('./tool.js');
+
 
 //enable Feature
 require('./intf.js');

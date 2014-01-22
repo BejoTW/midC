@@ -31,7 +31,11 @@ var view = {
         } catch (e) {
             return false;
         }
-    }  
+    },
+    syncRunningConfig: function () {
+        view.running = JSON.parse(JSON.stringify(view.preRunning));
+        return true;
+    }
 }
 
 module.exports = view;
