@@ -1,4 +1,5 @@
 "use strict";
+var tool = require('./tool.js');
 var assert = require('assert');
 var _ = require('underscore');
 var util = require('util');
@@ -37,6 +38,13 @@ var view = {
         }
         view.featureSeq = _.flatten(JSON.parse(JSON.stringify(_.values(v))), true);
         view.featureGroup = JSON.parse(JSON.stringify(v));
+    },
+    initFeature: function () {
+        for (var i in view.featureSeq) {
+            tool.log(view.featureSeq[i][0], 1);
+            view.e.emit(view.featureSeq[i][0], 'init');
+        }
+        return;
     },
 //example:
 // { '1': 

@@ -1,19 +1,19 @@
 "use strict"; 
 // var mUtils = require('./mUtils.js')
-// var e = require('./configEvent.js');
+var tool = require('./tool.js');
 var e = require('./config.js');
 var cm = require('./cm.js');
 var _ = require('underscore');
 var exec = require('child_process').exec, child;
 
 var intUtils = {
-    set: function (s) {
-        child = exec('ifconfig '+s.name[0]+' '+s.ip[0],
+    exec: function (s) {
+        child = exec(s,
         function (error, stdout, stderr) {
-            console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
+            tool.log('stdout: ' + stdout, 0);
+            tool.log('stderr: ' + stderr, 3);
             if (error !== null) {
-                console.log('exec error: ' + error);
+                tool.log('exec error: ' + error, 3);
             }
         })
     }
@@ -22,25 +22,18 @@ var intUtils = {
 var intf = {
     setFeatureOn: function () {
         //Same level and need On
-        console.log('Set Same level and dep feature On');
+        tool.log('Set Same level and dep feature On', 1);
         return;
     },
     setIP: function (n) {
-        console.log('***Do IP and mask change...');
+        tool.log('***Do IP and mask change...', 1);
         var evl = 'ifconfig '+n.name[0]+' '+n.ip[0]+' netmask '+n.mask[0];
-        console.log(evl);
-        child = exec(evl,
-        function (error, stdout, stderr) {
-            console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
-            if (error !== null) {
-                console.log('exec error: ' + error);
-            }
-        });
+        tool.log(evl, 0);
+        intUtils.exec(evl);
         return;
     },
     setSpeedDuplex: function (n) {
-        console.log('***Do Spped and Duplex change...');
+        tool.log('***Do Spped and Duplex change...', 1);
         var val = null;
         switch(n.speed[0]) {
             case '10':
@@ -67,15 +60,9 @@ var intf = {
             }
         }
         var evl = 'mii-tool '+val+' '+n.name[0];
-        console.log(evl);
-        child = exec(evl,
-        function (error, stdout, stderr) {
-            console.log('stdout: ' + stdout);
-            console.log('stderr: ' + stderr);
-            if (error !== null) {
-                console.log('exec error: ' + error);
-            }
-        })
+        tool.log(evl, 0);
+        intUtils(evl);
+        
         return;
     },
     doIt: function (old, n) {
@@ -101,8 +88,10 @@ var intf = {
 
 
 cm.e.on('intf', function (n) {
-    console.log(n);
     switch (n) {
+        case 'init':
+            tool.log('interface: init', 1);
+            return;
         case 'setFeatureOn':
             intf.setFeatureOn('routing');
             return;
@@ -114,11 +103,11 @@ cm.e.on('intf', function (n) {
     //Check which interface
     for (var i in e.running.intf) {
         if (n.intf[0].name[0] === e.running.intf[i].name[0]) {
-            console.log('match');
-            intUtils.set(n.intf[0]);
+            tool.log('match', 0);
+            intUtils.exec('ifconfig '+s.name[0]+' '+s.ip[0]);
             return;
         }
     }
-    console.log('no this interface');
+    tool.log('no this interface', 2);
     return;
 });

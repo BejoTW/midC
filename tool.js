@@ -1,4 +1,10 @@
 "use strict";
+//Define log level
+var EnableLevel = 0;
+var Debug = 0;
+var Log = 1;
+var Warning = 2;
+var Error = 3;
 
 function MongooseError(msg) {
     Error.call(this);
@@ -11,17 +17,21 @@ MongooseError.prototype.__proto__ = Error.prototype;
 
 var view = {
     log : function (s, level) {
-        var enableLevel = 0;
-        // level 0 - log, 1 - warning, 2 - error, 3 - oh...
-        if (level == null) {
+        // level 1-log, 2-warning, 3-error, 0-Debug...
+        if (level == null|| level > Error) {
             level = 0;
         }
-        if (level >= enableLevel) {
+        if (level >= EnableLevel) {
             console.log(s);
         }
         return;
     },
-    error : function (s, level) {
+    logObj : function (s, level) {
+        s = JSON.stringify(s);
+        view.log(s, level);
+        return;
+    },
+    error : function (s) {
 
         var err = new Error;
 

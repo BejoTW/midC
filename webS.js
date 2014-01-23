@@ -45,31 +45,6 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/intf', intf.page);
 
-app.post('/intf', function(req, res) {
-    
-    //assign val
-    var cfg = JSON.parse(req.body.data);
-    console.log(JSON.stringify(cfg));
-    // res.redirect( '/intf' );
-    e.preRunning = JSON.parse(JSON.stringify(cfg));
-    // e.preRunning.intf.data[0].name[0] = "eth1";
-    // e.preRunning.intf.data[0].ip[0] = req.body.ip;
-    // e.preRunning.intf.data[0].mask[0] = req.body.mask;
-    // e.preRunning.intf.data[0].speed[0] = req.body.speed;
-    // e.preRunning.intf.data[0].duplex[0] = req.body.duplex;
-    //TODO: check val fmt
-    var ret = cm.fmtCheckByRoot(e.preRunning);
-    for(var i in ret) {
-        if (ret[i].ret == false) {
-            console.log("Error format: "+ret[i].item);
-            res.redirect( '/intf' );
-            return;
-        }
-    }
-    // console.log('assign ready:' +JSON.stringify(e.preRunning));
-    cm.assign(e.running, e.preRunning);
-    res.redirect( '/intf' );
-});
 
 app.post('/receive', function(req, res) {
     
