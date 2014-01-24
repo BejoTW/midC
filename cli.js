@@ -48,7 +48,7 @@ var view = {
                 return c.indexOf(arg) == 0;
             });
         if (hits.length === 0 || hits.length > 1) {
-            console.log('Ambiguous command: %s', arg);
+            tool.log('Ambiguous command: %s', arg);
             return false;
         }
         return hits;
@@ -82,7 +82,7 @@ var view = {
         }
         cmdInShow['?'][1] = function () {
             for (var i in cmdInShow) {
-                console.log('%s - %s', i, cmdInShow[i][0]);
+                tool.log('%s - %s', i, cmdInShow[i][0]);
             }
             return;
         }
@@ -100,7 +100,7 @@ rl.prompt();
 rl.on('line', function (line) {
     switch (line.trim()) {
     case 'exec':
-        console.log('Enter exec mode...');
+        tool.log('Enter exec mode...');
         proMode = '#';
         break;
     case 'exit':
@@ -112,7 +112,7 @@ rl.on('line', function (line) {
     case '?':
     case 'help':
         for (var i in cmdInNormal) {
-            console.log('%s - %s', i, cmdInNormal[i][0]);
+            tool.log('%s - %s', i, cmdInNormal[i][0]);
         }
         break;
     case '':
@@ -124,6 +124,8 @@ rl.on('line', function (line) {
     rl.setPrompt(proStr + proMode);
     rl.prompt();
 }).on('close', function () { // ctrl+c
-    console.log('\nHave a great day!');
+    tool.log('\nHave a great day!');
     process.exit(0);
 });
+
+module.exports = view;

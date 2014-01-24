@@ -2,15 +2,15 @@
   "name"           : "middle-control-system",
   "description"    : "embedded system control",  
   "dependencies"   : {
-                        "native-dns" : "0.4.1",
                         "express" : "3.4.2",
+                        "underscore" : "1.5.2",
                         "ejs"    : "*"
                      },
   "author"         : "BEJO Li",
   "email"          : "bejo.mob@gmail.com",
-  "keywords"       : ["atv", "apple tv"],
-  "main"           : "atvDoMore.js",
+  "keywords"       : ["midC", "middle-control-system"],
+  "main"           : "main.js",
   "version"        : "0.0.1",
   "type"           : "git",
-  "url"            : "https://github.com/BejoTW/Simple-NodeJS-DNS-Server.git"
+  "url"            : "https://github.com/BejoTW/middle-control-system.git"
 }
