@@ -24,11 +24,10 @@ for (var i in cmdInNormal) {
     cmdInNormalName.push(i);
 }
 
-
 function completer(line) {
     var hits = cmdInNormalName.filter(function (c) {
             return c.indexOf(line) == 0
-        });   
+        });
     if (line.length === 0) {
         return [cmdInNormalName, line];
     } else {
@@ -37,24 +36,24 @@ function completer(line) {
 }
 
 var view = {
-    init: function () {
+    init : function () {
         cmdInNormal.show[1] = view.show;
     },
-    cmdListCk: function (arg, lists) {
+    cmdListCk : function (arg, lists) {
         var list = [];
-            for (var i in lists) {
+        for (var i in lists) {
             list.push(i);
         }
         var hits = list.filter(function (c) {
-            return c.indexOf(arg) == 0;
-        });
+                return c.indexOf(arg) == 0;
+            });
         if (hits.length === 0 || hits.length > 1) {
             console.log('Ambiguous command: %s', arg);
             return false;
         }
         return hits;
     },
-    cmd: function (s) {
+    cmd : function (s) {
         var argv = s.split(' ');
         var hits = view.cmdListCk(argv[0], cmdInNormal);
         if (hits != false) {
@@ -62,7 +61,7 @@ var view = {
         }
         return;
     },
-    show: function (argv) {
+    show : function (argv) {
         var cmdInShow = {
             "running" : ['running config', null],
             "preRunning" : ['pre running config', null],
@@ -83,14 +82,14 @@ var view = {
         }
         cmdInShow['?'][1] = function () {
             for (var i in cmdInShow) {
-                console.log('%s - %s', i,cmdInShow[i][0]);
-            } 
+                console.log('%s - %s', i, cmdInShow[i][0]);
+            }
             return;
         }
         var hits = view.cmdListCk(argv[1], cmdInShow);
         if (hits != false) {
             cmdInShow[hits[0]][1]();
-        }       
+        }
     }
 }
 
@@ -113,7 +112,7 @@ rl.on('line', function (line) {
     case '?':
     case 'help':
         for (var i in cmdInNormal) {
-            console.log('%s - %s', i,cmdInNormal[i][0]);
+            console.log('%s - %s', i, cmdInNormal[i][0]);
         }
         break;
     case '':
