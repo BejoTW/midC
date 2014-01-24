@@ -7,9 +7,6 @@ var cm = require('./cm.js');
 //enable Feature
 require('./intf.js');
 
-require('./cli.js');
-return;
-
 //Save-config Loading
 e.running = JSON.parse(JSON.stringify(e.readSave()));
 e.preRunning = JSON.parse(JSON.stringify(e.running));
@@ -20,3 +17,6 @@ cm.initFeature();
 //Enable Web Setting
 var webS = require('./webS.js');
 webS.start(3000, 4430);
+
+//Enable CLI
+require('./cli.js');

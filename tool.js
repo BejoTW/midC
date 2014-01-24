@@ -27,7 +27,9 @@ var view = {
         return;
     },
     logObj : function (s, level) {
-        s = JSON.stringify(s);
+        if (typeof s == 'object') {
+            s = JSON.stringify(s, null, 4)
+        }
         view.log(s, level);
         return;
     },
