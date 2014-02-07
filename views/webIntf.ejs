@@ -3,59 +3,17 @@
   <head>
     <title><%= title %></title>
     <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="js/utils.js"></script>
   </head>
   <body>
     <h1><%= title %></h1>
     <p>Configuration</p>
 <script>
-var charxml = function (s) {
-    return s.replace(/(&quot;)|(&gt;)|(&amp;)|(&lt;)|(&apos;)/g, function (c) {
-        return {
-            "&amp;": "&",
-            "&lt;": "<",
-            "&gt;": ">",
-            "&apos;": "'",
-            "&quot;": '"'
-        }[c]
-    })
-};
-
 var config = '<%= config %>';
 config = charxml(config);
 var configObj = JSON.parse(config);
 
-var req = function (url, method, headers, postdata,callback, args) {
-    if (!url) {
-        throw "loadURL requires a url argument";
-    }
-    var method = method || "GET",
-    headers = headers || {},
-    postdata = postdata || "";
-    var xhr = new XMLHttpRequest();
-    xhr.onreadystatechange = function() {
-        try {
-            if (xhr.readyState == 4 ) {
-                if ( xhr.status == 200) {
-                    callback(xhr.responseText, args);
-                } else {
-                    alert(' ERROR\n' +xhr.status+'\n'+url);
-                }
-            }
-        } catch (e) {
-            alert("Abort:  ERROR\n"+e);
-            xhr.abort();
-        }
-    }
-    xhr.open(method, url, false);
-    for(var key in headers) {
-        xhr.setRequestHeader(key, headers[key]);
-    }
-    xhr.send(postdata);
-    return xhr;
-};
-
 var sendTo = function () {
-
     for (var i in configObj.intf.data) {
         var t = configObj.intf.data[i];
         t.ip[0] = document.getElementById(t.name[0]+'ip').value;

@@ -1,23 +1,8 @@
 "use strict"; 
-// var mUtils = require('./mUtils.js')
 var tool = require('./tool.js');
 var e = require('./config.js');
 var cm = require('./cm.js');
 var _ = require('underscore');
-var exec = require('child_process').exec, child;
-
-var intUtils = {
-    exec: function (s) {
-        child = exec(s,
-        function (error, stdout, stderr) {
-            tool.log('stdout: ' + stdout, 0);
-            tool.log('stderr: ' + stderr, 3);
-            if (error !== null) {
-                tool.log('exec error: ' + error, 3);
-            }
-        })
-    }
-}
 
 var intf = {
     setFeatureOn: function () {
@@ -28,8 +13,7 @@ var intf = {
     setIP: function (n) {
         tool.log('***Do IP and mask change...', 1);
         var evl = 'ifconfig '+n.name[0]+' '+n.ip[0]+' netmask '+n.mask[0];
-        tool.log(evl, 0);
-        intUtils.exec(evl);
+        tool.exec(evl);
         return;
     },
     setSpeedDuplex: function (n) {
@@ -60,9 +44,7 @@ var intf = {
             }
         }
         var evl = 'mii-tool '+val+' '+n.name[0];
-        tool.log(evl, 0);
-        intUtils(evl);
-        
+        tool.exec(evl);
         return;
     },
     doIt: function (old, n) {
@@ -99,15 +81,5 @@ cm.e.on('intf', function (n) {
         default:
             intf.main('routing');
     }
-    return;
-    //Check which interface
-    for (var i in e.running.intf) {
-        if (n.intf[0].name[0] === e.running.intf[i].name[0]) {
-            tool.log('match', 0);
-            intUtils.exec('ifconfig '+s.name[0]+' '+s.ip[0]);
-            return;
-        }
-    }
-    tool.log('no this interface', 2);
     return;
 });

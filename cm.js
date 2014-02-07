@@ -19,8 +19,8 @@ var e = require('./config.js');
 //6 - Network L4 - L7
 //7 - Low level  
 var featureSet = [
+    ["nat", 4, false, 10, false, false],
     ["intf", 4, false, 20, false, false],
-    ["c", 4, false, 10, false, false],
     ["b", 4, false, 9, false, false],
     ["a", 1, false, 11, false, false],
     ["e", 1, false, 10, false, false],
@@ -187,27 +187,15 @@ var view = {
         var n = _.extend(dest, tmp);
         return [true, n];
     },
-    configGetByValue: function(root, index, value) {
+    configGetByValue: function(root, name, value) {
         var ret = [false, null];
-        function arraySearch(input, c) {
-
-            for (var i in input) {
-                if (input[i][c][0] == value) {
-                    ret = [true, input[i]];
-                    return;
-                } else {
-                    ret = [false, null];
-                }
+        for(var i in root) {
+            if (root[i][name] === value) {
+                ret = [true, root[i]];
+                return ret;
             }
+            continue;
         }
-        for(var i in index) {
-            if (index[i] == '?') {
-                arraySearch(root, index[parseInt(i)+1]);
-                break;
-            }
-            root = root[index[i]];
-        }
-
         return ret;
     },
     fmtCheckByRoot: function (root) {

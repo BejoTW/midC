@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="js/utils.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Configuration</p>
+<script>
+var config = '<%= config %>';
+config = charxml(config);
+var configObj = JSON.parse(config);
+
+var sendTo = function () {
+    var t = configObj.nat;
+    t.isEnable[0] = document.getElementById(t.isEnable[0]).value;
+    t.outside[0] = document.getElementById(t.outside[0]).value;
+    if (document.getElementById(t.inside[0]).value != null) {
+        t.inside[0] = document.getElementById(t.inside[0]).value;
+    }
+    var postdata = 'data='+JSON.stringify(configObj);
+    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+        var r = JSON.parse(d);
+        if (r.status != true) {
+            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+        }
+        return;
+    });
+}
+    
+</script>    
+<div id='nat'>
+</div>
+<button type="button" onclick="sendTo()">Send</button>
+
+<script>
+var t = configObj.nat;
+var html = '<div>Status: <input type="text" id="'+t.isEnable[0]+'" value="'+t.isEnable[0]+'"><br />Outside interface: <input type="text" id="'+t.outside[0]+'" value="'+t.outside[0]+'"><br />Inside network: <input type="text" id="'+t.inside[0]+'" value="'+t.inside[0]+'">  ex: 192.168.1.0/24<br />';
+
+document.getElementById("nat").innerHTML = html;
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

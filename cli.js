@@ -82,7 +82,7 @@ var view = {
         }
         cmdInShow['?'][1] = function () {
             for (var i in cmdInShow) {
-                tool.log('%s - %s', i, cmdInShow[i][0]);
+                tool.log(i+' - '+cmdInShow[i][0], 1);
             }
             return;
         }
@@ -112,7 +112,7 @@ rl.on('line', function (line) {
     case '?':
     case 'help':
         for (var i in cmdInNormal) {
-            tool.log('%s - %s', i, cmdInNormal[i][0]);
+            tool.log(i+' - '+cmdInNormal[i][0], 1);
         }
         break;
     case '':

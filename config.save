@@ -1,5 +1,11 @@
 {
     "isLeaf" : ["false", "."],
+    "nat" : {
+        "isLeaf" : ["true", "."],
+        "isEnable" : ["true", "."],
+        "outside" : ["eth2", "."],
+        "inside" : [null, "."]
+    },
     "intf" : {
         "isLeaf" : ["false", "."],
         "data" :

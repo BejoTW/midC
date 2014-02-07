@@ -6,8 +6,11 @@
 
 var express = require('express');
 var routes = require('./routes');
+
 var user = require('./routes/user');
 var intf = require('./routes/webIntf');
+var nat = require('./routes/webNat');
+
 var http = require('http');
 var path = require('path');
 var https = require('https');
@@ -44,7 +47,7 @@ if ('development' == app.get('env')) {
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/intf', intf.page);
-
+app.get('/nat', nat.page);
 
 app.post('/receive', function(req, res) {
     

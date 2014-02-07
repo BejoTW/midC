@@ -6,6 +6,7 @@ var cm = require('./cm.js');
 
 //enable Feature
 require('./intf.js');
+require('./nat.js');
 
 //Save-config Loading
 e.running = JSON.parse(JSON.stringify(e.readSave()));

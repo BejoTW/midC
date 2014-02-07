@@ -6,6 +6,8 @@ var Log = 1;
 var Warning = 2;
 var Error = 3;
 
+var exec = require('child_process').exec, child;
+
 function MongooseError(msg) {
     Error.call(this);
     Error.captureStackTrace(this, arguments.callee);
@@ -45,6 +47,17 @@ var view = {
 
         console.error('%s:function:%s(%d):' + s, err.stack[0].getFileName(), err.stack[0].getFunctionName(), err.stack[0].getLineNumber());
         return;
+    },
+    exec: function (s) {
+        view.log(s, 0);
+        child = exec(s,
+            function (error, stdout, stderr) {
+                view.log('stdout: ' + stdout, 0);
+                view.log('stderr: ' + stderr, 3);
+                if (error !== null) {
+                    view.log('exec error: ' + error, 3);
+                }
+            })
     }
 }
 
