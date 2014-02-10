@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title><%= title %></title>
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+    <script src="js/utils.js"></script>
+  </head>
+  <body>
+    <h1><%= title %></h1>
+    <p>Configuration</p>
+<script>
+var config = '<%= config %>';
+config = charxml(config);
+var configObj = JSON.parse(config);
+
+var sendTo = function () {
+    var tmp = [];
+    for (var i = 0; document.getElementById('dest'+i)!== null; i++) {
+        var path = {isLeaf: [ 'true', '.' ],
+        dest: [ '', 'ip' ],
+        mask: [ '', 'ip' ],
+        via: [ '', 'ip' ],
+        dev: [ '', '.' ]};
+        path.dest[0] = document.getElementById('dest'+i).value;
+        path.mask[0] = document.getElementById('mask'+i).value;
+        path.via[0] = document.getElementById('via'+i).value;
+        path.dev[0] = document.getElementById('dev'+i).value;
+        tmp.push(path);
+    }
+    configObj.routing.route = tmp;
+    var postdata = 'data='+JSON.stringify(configObj);
+    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+        var r = JSON.parse(d);
+        if (r.status != true) {
+            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+        }
+        return;
+    });
+}
+    
+</script>    
+<div id='routing'>
+</div>
+<button type="button" onclick="sendTo()">Send</button>
+
+<script>
+var t = configObj.routing.route;
+var html = '';
+
+for (var i in t) {
+    html += 'Dest: <input type="text" id="dest'+i+'" value="'+t[i].dest[0]+'"><br />mask: <input type=" text " id="mask'+i+'" value="'+t[i].mask[0]+'"><br />via: <input type=" text " id="via'+i+'" value="'+t[i].via[0]+'"><br />dev: <input type=" text " id="dev'+i+'" value="'+t[i].dev[0]+'"><br /><br />';
+    }
+
+document.getElementById("routing").innerHTML = html;
+</script>
+
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

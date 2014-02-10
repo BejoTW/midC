@@ -10,6 +10,7 @@ var routes = require('./routes');
 var user = require('./routes/user');
 var intf = require('./routes/webIntf');
 var nat = require('./routes/webNat');
+var routing = require('./routes/webRouting');
 
 var http = require('http');
 var path = require('path');
@@ -48,6 +49,7 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/intf', intf.page);
 app.get('/nat', nat.page);
+app.get('/routing', routing.page);
 
 app.post('/receive', function(req, res) {
     
