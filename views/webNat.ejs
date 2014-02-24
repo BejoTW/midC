@@ -1,49 +1,57 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="js/utils.js"></script>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Configuration</p>
-<script>
-var config = '<%= config %>';
-config = charxml(config);
-var configObj = JSON.parse(config);
+<!-- Include layout by using Node.js 3.x function \<\% include (userdesign.ejs) %> -->
+<% include layoutTop %>
+<% include layoutLeft %>
 
-var sendTo = function () {
-    var t = configObj.nat;
-    t.isEnable[0] = document.getElementById(t.isEnable[0]).value;
-    t.outside[0] = document.getElementById(t.outside[0]).value;
-    if (document.getElementById(t.inside[0]).value != null) {
-        t.inside[0] = document.getElementById(t.inside[0]).value;
-    }
-    var postdata = 'data='+JSON.stringify(configObj);
-    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
-        var r = JSON.parse(d);
-        if (r.status != true) {
-            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
-        }
-        return;
-    });
-}
-    
-</script>    
-<div id='nat'>
+<script>
+	<!-- Use JQuery lib to initiate list highlight -->
+	$("#aHrefRouting").removeClass( "active" );
+	$("#aHrefNat").addClass( "active" );
+	$("#aHrefIntf").removeClass( "active" );
+	
+	var config = '<%= config %>';
+	config = charxml(config);
+	var configObj = JSON.parse(config);
+
+	var sendTo = function () {
+		var t = configObj.nat;
+		t.isEnable[0] = document.getElementById(t.isEnable[0]).value;
+		t.outside[0] = document.getElementById(t.outside[0]).value;
+		if (document.getElementById(t.inside[0]).value != null) {
+			t.inside[0] = document.getElementById(t.inside[0]).value;
+		}
+		var postdata = 'data='+JSON.stringify(configObj);
+		req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+			var r = JSON.parse(d);
+			if (r.status != true) {
+				alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+			}
+		});
+		location.reload();
+	}
+</script>  
+
+<div id="webNat"></div>
+<div class="btn-customize-position">
+	<button type="submit" class="btn btn-primary btn-customize" onclick="sendTo()">Submit</button>
 </div>
-<button type="button" onclick="sendTo()">Send</button>
 
 <script>
-var t = configObj.nat;
-var html = '<div>Status: <input type="text" id="'+t.isEnable[0]+'" value="'+t.isEnable[0]+'"><br />Outside interface: <input type="text" id="'+t.outside[0]+'" value="'+t.outside[0]+'"><br />Inside network: <input type="text" id="'+t.inside[0]+'" value="'+t.inside[0]+'">  ex: 192.168.1.0/24<br />';
-
-document.getElementById("nat").innerHTML = html;
+	<!-- Define HTML format for webNat content -->
+	var t = configObj.nat;
+	var natPanel = '<div id="natPanel" class="panel panel-primary"><div class="panel-heading">Nat</div></div>';
+	var natTable = 
+	'<table id=natTable class="table table-hover table-bordered"></table>';
+	var natStatus = '<tr><td><span class="label label-info">Status </span></td><td><input type="text" class="form-control" id="'+t.isEnable[0]+'" value="'+t.isEnable[0]+'"></td></tr>';
+	var natOutIntf = '<tr><td><span class="label label-info">Outside Interface </span></td><td><input type="text" class="form-control" id="'+t.outside[0]+'" value="'+t.outside[0]+'"></td></tr>';
+	var natInNet = '<tr><td><span class="label label-info">Inside network </span></td><td><input type="text" class="form-control" id="'+t.inside[0]+'" value="'+t.inside[0]+'"><i>ex: 192.168.1.0/24</i></td></tr>';
+	
+	<!-- Use JQuery lib to create HTML Panel and Table -->
+	$("#webNat").append(natPanel);
+	$('#natPanel').append($(natTable).append(natStatus, natOutIntf, natInNet));
 </script>
-
-</body>
-</html>
+  
+<% include layoutRight %>
+<% include layoutBottom %>
 
 
 

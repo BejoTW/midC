@@ -1,11 +1,7 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Welcome to <%= title %></p>
-  </body>
-</html>
+<!-- Include layout by using Node.js 3.x function \<\% include (userdesign.ejs) %> -->
+<% include layoutTop %>
+<% include layoutLeft %>
+  <h1><%= title %></h1>
+  <p>Welcome to <%= title %></p>
+<% include layoutRight %>
+<% include layoutBottom %>

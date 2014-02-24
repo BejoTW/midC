@@ -1,62 +1,197 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="js/utils.js"></script>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Configuration</p>
-<script>
-var config = '<%= config %>';
-config = charxml(config);
-var configObj = JSON.parse(config);
+<!-- Include layout by using Node.js 3.x function \<\% include (userdesign.ejs) %> -->
+<% include layoutTop %>
+<% include layoutLeft %>
 
-var sendTo = function () {
-    var tmp = [];
-    for (var i = 0; document.getElementById('dest'+i)!== null; i++) {
-        var path = {isLeaf: [ 'true', '.' ],
-        dest: [ '', 'ip' ],
-        mask: [ '', 'ip' ],
-        via: [ '', 'ip' ],
-        dev: [ '', '.' ]};
-        path.dest[0] = document.getElementById('dest'+i).value;
-        path.mask[0] = document.getElementById('mask'+i).value;
-        path.via[0] = document.getElementById('via'+i).value;
-        path.dev[0] = document.getElementById('dev'+i).value;
-        tmp.push(path);
-    }
-    configObj.routing.route = tmp;
-    var postdata = 'data='+JSON.stringify(configObj);
-    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
-        var r = JSON.parse(d);
-        if (r.status != true) {
-            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
-        }
-        return;
-    });
-}
-    
+<script>
+	<!-- Use JQuery lib to initiate list highlight -->
+	$("#aHrefRouting").addClass( "active" );
+	$("#aHrefNat").removeClass( "active" );
+	$("#aHrefIntf").removeClass( "active" );
+	
+	var config = '<%= config %>';
+	config = charxml(config);
+	var configObj = JSON.parse(config);
+	
+	<!-- addTo function: use for creating routing table -->
+	var addTo = function () {
+		if (document.getElementById('addDest')!== null) {
+			var path = {
+			isLeaf: [ 'true', '.' ],
+			dest: [ '', 'ip' ],
+			mask: [ '', 'ip' ],
+			via: [ '', 'ip' ],
+			dev: [ '', '.' ]};
+
+			path.dest[0] = document.getElementById('addDest').value;
+			path.mask[0] = document.getElementById('addMask').value;
+			path.via[0] = document.getElementById('addVia').value;
+			path.dev[0] = document.getElementById('addDev').value;
+		}
+		configObj.routing.route.push(path);
+		
+		var postdata = 'data='+JSON.stringify(configObj);
+
+		req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+			var r = JSON.parse(d);
+			if (r.status != true) {
+				alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+			}
+		});
+		location.reload();
+	}
+	
+	<!-- deleteTo function: use for deleting routing table -->
+	var deleteTo = function () {	  
+		var tmp = [];
+		var spliceCount = 0;
+		var newICount = 0;
+	  		  
+		for (var i = 0; document.getElementById('dest'+i) !== null; i++) {
+			var jsonPathData = {
+			  isLeaf: ['true','.'],
+			  dest: ['null','ip'],
+			  mask: ['null','ip'],
+			  via: ['null','ip'],
+			  dev: ['null','.']
+			};
+
+			jsonPathData.dest[0] = $('#dest'+i).text();
+			jsonPathData.mask[0] = $('#mask'+i).text();
+			jsonPathData.via[0] = $('#via'+i).text();
+			jsonPathData.dev[0] = $('#dev'+i).text();
+			
+			tmp.push(jsonPathData);
+		}
+		
+		<!-- add newICount variable for re-counting tmp[] item order, due to that after utilizing .splice function, tmp[] item order will refresh.--> 
+		$( "#deleteRoutingTable input.form-checkbox" ).prop("checked", function( i, val ) {
+			newICount = i - spliceCount;			
+			if (document.getElementById('dest'+i) !== null && val === true) {
+				tmp[newICount].isLeaf = null;
+				tmp[newICount].dest = null;
+				tmp[newICount].mask = null;
+				tmp[newICount].via = null;
+				tmp[newICount].dev = null;				
+				tmp.splice(newICount, 1);
+				spliceCount = spliceCount + 1;
+			}
+		});
+	  
+		configObj.routing.route = tmp;
+		var postdata = 'data='+JSON.stringify(configObj);
+
+		req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+			var r = JSON.parse(d);
+			if (r.status != true) {
+				alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+			}
+		});
+		location.reload();
+	}
 </script>    
-<div id='routing'>
+
+<div id="webRouting" class="panel panel-primary">
+	<div class="panel-heading">Routing</div>
+	<table id="routingTable" class="table table-hover table-bordered table-striped">
+		<tr>
+			<th><span class="label label-info">Item </span></th>
+			<th><span class="label label-info">Dest </span></th>
+			<th><span class="label label-info">Mask </span></th>
+			<th><span class="label label-info">Via: </span></th>
+			<th><span class="label label-info">Dev </span></th>
+		</tr>
+	</table>
 </div>
-<button type="button" onclick="sendTo()">Send</button>
 
-<script>
-var t = configObj.routing.route;
-var html = '';
 
-for (var i in t) {
-    html += 'Dest: <input type="text" id="dest'+i+'" value="'+t[i].dest[0]+'"><br />mask: <input type=" text " id="mask'+i+'" value="'+t[i].mask[0]+'"><br />via: <input type=" text " id="via'+i+'" value="'+t[i].via[0]+'"><br />dev: <input type=" text " id="dev'+i+'" value="'+t[i].dev[0]+'"><br /><br />';
-    }
+<!-- Button trigger modal -->
+<div class="btn-customize-position">
+	<button class="btn btn-primary" data-toggle="modal" data-target="#myAddModal">Add</button>
+	<button class="btn btn-primary" data-toggle="modal" data-target="#myDeleteModal">Delete</button>
+</div>
 
-document.getElementById("routing").innerHTML = html;
+<!-- Add Modal -->
+<div class="modal fade" id="myAddModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-body">		
+				<div class="panel panel-primary" id="addWebRouting">
+					<div class="panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Add Web Routing</h4>
+					</div>
+					<table id="addWebRoutingTable" class="table table-hover table-bordered">
+						<tr>
+							<th><span class="label label-info">Dest </span></th>
+							<td><input type="text" class="form-control" id="addDest" placeholder="ex: 192.168.10.1"></td>
+						</tr>
+						<tr>
+							<th><span class="label label-info">Mask </span></th>
+							<td><input type="text" class="form-control" id="addMask" placeholder="ex: 255.255.255.0"></td>
+						</tr>
+						<tr>
+							<th><span class="label label-info">Via </span></th>
+							<td><input type="text" class="form-control" id="addVia" placeholder="ex: 192.168.1.1"></td>
+						</tr>
+						<tr>
+							<th><span class="label label-info">Dev </span></th>
+							<td><input type="text" class="form-control" id="addDev" placeholder="ex: eth0"></td>
+						</tr>
+					</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="addTo()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<!-- Delete Modal -->
+<div class="modal fade" id="myDeleteModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">		
+			<div class="modal-body" id="deleteModalBody">
+				<div class="panel panel-primary">
+					<div class="panel-heading">
+						<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+						<h4 class="modal-title" id="myModalLabel">Delete Web Routing</h4>
+					</div>
+						<table id="deleteRoutingTable" class="table table-hover table-bordered table-striped">
+							<tr>
+								<th><span class="label label-info">Item </span></th>
+								<th><span class="label label-info">Dest </span></th>
+								<th><span class="label label-info">Mask </span></th>
+								<th><span class="label label-info">Via </span></th>
+								<th><span class="label label-info">Dev </span></th>
+							</tr>
+						</table>
+				</div>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+				<button type="button" class="btn btn-primary" data-dismiss="modal" onclick="deleteTo()">Save changes</button>
+			</div>
+		</div>
+	</div>
+</div>
+  
+<script>					
+	<!-- Define HTML format for webRouting content. Use for loop to access data of configObj.routing.route and set HTML Table automatically.-->
+	var t = configObj.routing.route;
+	for (var i in t) {			
+		var routingRow = '<tr><td><span id="row'+i+'" class="span-item">#'+i+'</span></td><td><span id="dest'+i+'">'+t[i].dest[0]+'</span></td><td><span id="mask'+i+'">'+t[i].mask[0]+'</span></td><td><span id="via'+i+'">'+t[i].via[0]+'</span></td><td><span id="dev'+i+'">'+t[i].dev[0]+'</span></tr>';
+		
+		<!-- Use JQuery lib to create HTML Table -->
+		$("#webRouting").append($("#routingTable").append(routingRow));
+		$("#deleteModalBody").append($("#deleteRoutingTable").append(routingRow));
+		$("#deleteRoutingTable span.span-item").replaceWith('<input type="checkbox" class="form-checkbox" id="rowCheckBox'+i+'">');
+	}	
 </script>
-
-</body>
-</html>
-
+  
+<% include layoutRight %>
+<% include layoutBottom %>
 
 
 

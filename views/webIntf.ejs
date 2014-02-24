@@ -1,57 +1,64 @@
-<!DOCTYPE html>
-<html>
-  <head>
-    <title><%= title %></title>
-    <link rel='stylesheet' href='/stylesheets/style.css' />
-    <script src="js/utils.js"></script>
-  </head>
-  <body>
-    <h1><%= title %></h1>
-    <p>Configuration</p>
+<!-- Include layout by using Node.js 3.x function \<\% include (userdesign.ejs) %> -->
+<% include layoutTop %>
+<% include layoutLeft %>
+
 <script>
-var config = '<%= config %>';
-config = charxml(config);
-var configObj = JSON.parse(config);
+	<!-- Use JQuery lib to initiate list highlight -->
+	$("#aHrefRouting").removeClass( "active" );
+	$("#aHrefNat").removeClass( "active" );
+	$("#aHrefIntf").addClass( "active" );
 
-var sendTo = function () {
-    for (var i in configObj.intf.data) {
-        var t = configObj.intf.data[i];
-        t.ip[0] = document.getElementById(t.name[0]+'ip').value;
-        t.mask[0] = document.getElementById(t.name[0]+'mask').value;
-        t.duplex[0] = document.getElementById(t.name[0]+'duplex').value;
-        t.speed[0] = document.getElementById(t.name[0]+'speed').value;
-    };
+	var config = '<%= config %>';
+	config = charxml(config);
+	var configObj = JSON.parse(config);
+	var sendTo = function () {
+		for (var i in configObj.intf.data) {
+			var t = configObj.intf.data[i];
+			t.ip[0] = document.getElementById(t.name[0]+'ip').value;
+			t.mask[0] = document.getElementById(t.name[0]+'mask').value;
+			t.duplex[0] = document.getElementById(t.name[0]+'duplex').value;
+			t.speed[0] = document.getElementById(t.name[0]+'speed').value;
+		};
 
-    var postdata = 'data='+JSON.stringify(configObj);
-    req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
-        var r = JSON.parse(d);
-        if (r.status != true) {
-            alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
-        }
-        return;
-    });
-}
-    
+		var postdata = 'data='+JSON.stringify(configObj);
+		req('/receive', 'POST', {"Content-type": "application/x-www-form-urlencoded"}, postdata, function (d){
+			var r = JSON.parse(d);
+			if (r.status != true) {
+				alert(r.status+' Format error \nitem: '+r.item+'\nvalue: '+r.value);
+			}
+		});
+		location.reload();
+	}
 </script>    
-<div id='intList'>
+ 
+
+<div id="webIntList"></div>
+<div class="btn-customize-position">
+	<button type="submit" class="btn btn-primary" onclick="sendTo()">Submit</button>
 </div>
-<button type="button" onclick="sendTo()">Send</button>
-
+	
+	  
 <script>
-var html = '';
-for (var i in configObj.intf.data) {
-    var t = configObj.intf.data[i];
-    html += '<div id='+t.name[0]+'>'+t.name[0]+':<br />IP: <input type="text" id="'+t.name[0]+'ip" value="'+t.ip[0]+'"><br />Mask: <input type="text" id="'+t.name[0]+'mask" value="'+t.mask[0]+'"><br />Duplex: <input type="text" id="'+t.name[0]+'duplex" value="'+t.duplex[0]+'"><br />Speed: <input type="text" id="'+t.name[0]+'speed" value="'+t.speed[0]+'"><br /><br /></div>';
-}
+	<!-- Define HTML format for webIntf content. Use for loop to access data of configObj.intf.data and set HTML Panel&Table automatically.-->
+	for (var i in configObj.intf.data) {
+		var t = configObj.intf.data[i];
 
-document.getElementById("intList").innerHTML = html;
+		var intfPanel = '<div id='+t.name[0]+' class="panel panel-primary"><div class="panel-heading">'+t.name[0]+':</div></div>';
+		var intfTable = '<table id=interfaceTable_'+i+' class="table table-hover table-bordered"></table>';
+		var intfIp = '<tr><td><span class="label label-info">IP </span></td><td><input type="text" class="form-control" id="'+t.name[0]+'ip" value="'+t.ip[0]+'"></td></tr>';
+		var intfMask = '<tr><td><span class="label label-info">Mask </span></td><td><input type="text" class="form-control" id="'+t.name[0]+'mask" value="'+t.mask[0]+'"></td></tr>';
+		var intfDuplex = '<tr><td><span class="label label-info">Duplex </span></td><td><select id="'+t.name[0]+'duplex" class="btn btn-default"><option value="auto">auto</option><option value="full">full</option><option value="half">half</option></select></td></tr>';	
+		var intfSpeed = '<tr><td><span class="label label-info">Speed </span></td><td><select id="'+t.name[0]+'speed" class="btn btn-default"><option value="auto">auto</option><option value="10">10</option><option value="100">100</option><option value="1000">1000</option></select></td></tr>';
+		
+		<!-- Use JQuery lib to create HTML Panel and Table -->
+		$("#webIntList").append(intfPanel);
+		$('#'+t.name[0]).append($(intfTable).append(intfIp, intfMask, intfDuplex, intfSpeed));
+	}
 </script>
 
-</body>
-</html>
-
-
-
+  
+<% include layoutRight %>
+<% include layoutBottom %>
 
 
 

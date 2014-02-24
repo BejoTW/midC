@@ -45,7 +45,9 @@ if ('development' == app.get('env')) {
   app.use(express.errorHandler());
 }
 
-app.get('/', routes.index);
+// re-direct page '/' to page /intf
+//app.get('/', routes.index);
+app.get('/', intf.page);
 app.get('/users', user.list);
 app.get('/intf', intf.page);
 app.get('/nat', nat.page);
@@ -65,6 +67,7 @@ app.post('/receive', function(req, res) {
             return;
         }
     }
+	
     res.send('{"status": true}');
     cm.assign(e.running, e.preRunning);
 });
