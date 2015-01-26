@@ -7,7 +7,7 @@ Controller for embedded system by nodeJS
 ## USAGE
 
 Installation method:
-```chef
+```
 #git clone SRC_PATH.git
 #npm install
 #nodejs main.js
@@ -16,11 +16,20 @@ http://192.168.1.10:3000/
 https://192.168.1.10:4430/
 ```
 
+## TODO
+Feature:
+```
+- install apps online by npm
+- telnet support
+- online text editor
+
+```
+
 #### Component
 
 ##### WebUI:
 
-```chef
+```
 component 
 	- Setup var: Server port, SSL port, 
 	- gen WebPage from config dynamic
@@ -41,7 +50,7 @@ File:
 
 ##### CM: Config management
 
-```chef
+```
 component:
 	- combine config
 	- assign feature
@@ -67,7 +76,7 @@ API:
              [ "intf", 4, false, 20, false, false ] ],
       "5": [ [ "routing", 5, false, 10, false, false ] ] }
 ```
-```chef
+```
 	- featureReq
 		- example:   PS: isDep - is Depened ?
 		-     0    1    2     3      4        5
@@ -124,7 +133,7 @@ API:
 
 ##### CM -> feature example: intf:
 
-```chef
+```
 component:
 	- Set int IP, Mask, speed, duplex
 	- Process handle
@@ -133,7 +142,7 @@ component:
 
 ##### Storage - Config format/API
 
-```chef
+```
 File: 
 	- config.js
 		- main JS
@@ -197,7 +206,7 @@ example:
 
 ##### Tool
 
-```chef
+```
 tool.log()
     -var EnableLevel = 0;
 var Debug = 0;
