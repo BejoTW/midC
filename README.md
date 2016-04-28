@@ -1,5 +1,7 @@
 # [midC](https://github.com/BejoTW/midC)
 
+[![Join the chat at https://gitter.im/BejoTW/midC](https://badges.gitter.im/BejoTW/midC.svg)](https://gitter.im/BejoTW/midC?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ## DESCRIPTION
 
 Controller for embedded system by nodeJS
